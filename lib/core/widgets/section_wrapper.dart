@@ -3,12 +3,14 @@ import 'package:my_portfolio/core/constants/app_constants.dart';
 
 class SectionWrapper extends StatelessWidget {
   final String sectionKey;
+  final GlobalKey? globalKey;
   final Widget child;
   final Color? backgroundColor;
 
   const SectionWrapper({
     super.key,
     required this.sectionKey,
+    this.globalKey,
     required this.child,
     this.backgroundColor,
   });
@@ -16,7 +18,7 @@ class SectionWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: ValueKey(sectionKey),
+      key: globalKey ?? ValueKey(sectionKey),
       width: double.infinity,
       color: backgroundColor,
       padding: const EdgeInsets.symmetric(

@@ -2,15 +2,16 @@ class AppConstants {
   AppConstants._();
 
   // ── Personal Info ───────────────────────────────────────────────────
-  static const String name = 'Your Name';
+  static const String name = 'Pham Hoang Long Dang';
   static const String tagline =
       'Flutter Developer | Firebase Expert | AI Engineering Enthusiast';
-  static const String email = 'your.email@example.com';
-  static const String location = 'Your City, Country';
+  static const String email = 'antholeo@gmail.com';
+  static const String location = 'Berlin, Germany';
 
   // ── Social Links ────────────────────────────────────────────────────
-  static const String githubUrl = 'https://github.com/yourusername';
-  static const String linkedInUrl = 'https://linkedin.com/in/yourusername';
+  static const String githubUrl = 'https://github.com/DPHLong';
+  static const String linkedInUrl =
+      'https://linkedin.com/in/long-dang-163309351';
   static const String resumeUrl = '';
 
   // ── Section IDs (for scroll navigation) ─────────────────────────────

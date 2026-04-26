@@ -3,12 +3,15 @@ import 'package:my_portfolio/core/constants/app_constants.dart';
 import 'package:my_portfolio/core/widgets/section_wrapper.dart';
 
 class ProjectsSection extends StatelessWidget {
-  const ProjectsSection({super.key});
+  final GlobalKey sectionKey;
+
+  const ProjectsSection({super.key, required this.sectionKey});
 
   @override
   Widget build(BuildContext context) {
     return SectionWrapper(
       sectionKey: AppConstants.sectionProjects,
+      globalKey: sectionKey,
       child: Center(
         child: Text(
           'Projects Section',
