@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../widgets/chat_widget.dart';
 
 class ResponsiveLayout extends StatelessWidget {
   final Widget child;
@@ -30,10 +31,15 @@ class ResponsiveLayout extends StatelessWidget {
             )
           : null,
       drawer: isMobile(context) ? const MobileDrawer() : null,
-      body: Column(
+      body: Stack(
         children: [
-          if (isDesktop(context)) const DesktopNavBar(),
-          Expanded(child: child),
+          Column(
+            children: [
+              if (isDesktop(context)) const DesktopNavBar(),
+              Expanded(child: child),
+            ],
+          ),
+          const ChatWidget(),
         ],
       ),
     );
