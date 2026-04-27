@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProjectsScreen extends StatelessWidget {
   const ProjectsScreen({super.key});
@@ -22,6 +23,8 @@ class ProjectsScreen extends StatelessWidget {
           'AWS',
         ],
         'imageUrl': 'https://via.placeholder.com/400x200?text=E-Commerce+App',
+        'githubUrl': 'https://github.com',
+        'liveDemoUrl': 'https://flutter.dev',
       },
       {
         'title': 'AI Agent',
@@ -31,6 +34,8 @@ class ProjectsScreen extends StatelessWidget {
             'experience -- powered by Google Gemini via Firebase Cloud Functions.',
         'tech': ['Flutter', 'Gemini API', 'Riverpod'],
         'imageUrl': 'https://via.placeholder.com/400x200?text=AI+Agent',
+        'githubUrl': 'https://github.com',
+        'liveDemoUrl': 'https://flutter.dev',
       },
       {
         'title': 'Portfolio Website',
@@ -41,6 +46,8 @@ class ProjectsScreen extends StatelessWidget {
         'tech': ['Flutter Web', 'Dart', 'Firebase Hosting'],
         'imageUrl':
             'https://via.placeholder.com/400x200?text=Portfolio+Website',
+        'githubUrl': 'https://github.com',
+        'liveDemoUrl': 'https://flutter.dev',
       },
       {
         'title': 'REST API Service',
@@ -50,6 +57,8 @@ class ProjectsScreen extends StatelessWidget {
             'comprehensive Swagger documentation.',
         'tech': ['Java', 'Spring Boot', 'REST API', 'JWT', 'Swagger'],
         'imageUrl': 'https://via.placeholder.com/400x200?text=REST+API+Service',
+        'githubUrl': 'https://github.com',
+        'liveDemoUrl': 'https://flutter.dev',
       },
       {
         'title': 'E-Commerce Mobile App',
@@ -60,6 +69,8 @@ class ProjectsScreen extends StatelessWidget {
         'tech': ['Flutter', 'Firebase', 'Stripe API'],
         'imageUrl':
             'https://via.placeholder.com/400x200?text=E-Commerce+Mobile+App',
+        'githubUrl': 'https://github.com',
+        'liveDemoUrl': 'https://flutter.dev',
       },
       {
         'title': 'Timee - Cross-Platform Calendar App',
@@ -69,6 +80,8 @@ class ProjectsScreen extends StatelessWidget {
             'Map integration, and team collaboration features.',
         'tech': ['Flutter', 'Firebase', 'Firestore', 'FCM'],
         'imageUrl': 'https://via.placeholder.com/400x200?text=Timee',
+        'githubUrl': 'https://github.com',
+        'liveDemoUrl': 'https://flutter.dev',
       },
       {
         'title': 'Zoom Clone App',
@@ -77,6 +90,8 @@ class ProjectsScreen extends StatelessWidget {
             'and Firebase. Includes real-time chat & video call, push notifications.',
         'tech': ['Flutter', 'WebRTC', 'Firebase', 'FCM'],
         'imageUrl': 'https://via.placeholder.com/400x200?text=Zoom+Clone',
+        'githubUrl': 'https://github.com',
+        'liveDemoUrl': 'https://flutter.dev',
       },
       {
         'title': 'Tiktok Clone App',
@@ -85,6 +100,8 @@ class ProjectsScreen extends StatelessWidget {
             'shared videos, and music integration. Built on Firestore streams.',
         'tech': ['Flutter', 'Firebase', 'Firestore', 'FCM'],
         'imageUrl': 'https://via.placeholder.com/400x200?text=Tiktok+Clone',
+        'githubUrl': 'https://github.com',
+        'liveDemoUrl': 'https://flutter.dev',
       },
       {
         'title': 'Instagram Clone App',
@@ -94,6 +111,8 @@ class ProjectsScreen extends StatelessWidget {
             'Built on Firestore streams.',
         'tech': ['Flutter', 'Firebase', 'Firestore', 'FCM'],
         'imageUrl': 'https://via.placeholder.com/400x200?text=Instagram+Clone',
+        'githubUrl': 'https://github.com',
+        'liveDemoUrl': 'https://flutter.dev',
       },
       {
         'title': 'Boost Beast',
@@ -103,6 +122,8 @@ class ProjectsScreen extends StatelessWidget {
             'Built with Unity 3D and C# for Windows and Console platforms.',
         'tech': ['Unity 3D', 'C#', 'Blender'],
         'imageUrl': 'https://via.placeholder.com/400x200?text=Boost+Beast',
+        'githubUrl': 'https://github.com',
+        'liveDemoUrl': 'https://flutter.dev',
       },
       {
         'title': 'Rocket Boost',
@@ -112,6 +133,8 @@ class ProjectsScreen extends StatelessWidget {
             'Built with Unity 3D and C# for Windows and Mobile platforms.',
         'tech': ['Unity 3D', 'C#', 'Blender'],
         'imageUrl': 'https://via.placeholder.com/400x200?text=Rocket+Boost',
+        'githubUrl': 'https://github.com',
+        'liveDemoUrl': 'https://flutter.dev',
       },
       {
         'title': 'Royal Run',
@@ -121,6 +144,8 @@ class ProjectsScreen extends StatelessWidget {
             'Built with Unity 3D and C# for Windows and Mobile platforms.',
         'tech': ['Unity 3D', 'C#', 'Blender'],
         'imageUrl': 'https://via.placeholder.com/400x200?text=Royal+Run',
+        'githubUrl': 'https://github.com',
+        'liveDemoUrl': 'https://flutter.dev',
       },
       {
         'title': 'Galaxy Strike',
@@ -130,6 +155,8 @@ class ProjectsScreen extends StatelessWidget {
             'Built with Unity 3D and C# for Windows and Mobile platforms.',
         'tech': ['Unity 3D', 'C#', 'Blender'],
         'imageUrl': 'https://via.placeholder.com/400x200?text=Galaxy+Strike',
+        'githubUrl': 'https://github.com',
+        'liveDemoUrl': 'https://flutter.dev',
       },
     ];
 
@@ -175,6 +202,8 @@ class ProjectsScreen extends StatelessWidget {
                         description: project['description'] as String,
                         tech: project['tech'] as List<String>,
                         imageUrl: project['imageUrl'] as String,
+                        githubUrl: project['githubUrl'] as String?,
+                        liveDemoUrl: project['liveDemoUrl'] as String?,
                       );
                     },
                   );
@@ -193,12 +222,17 @@ class _ProjectCard extends StatefulWidget {
   final String description;
   final List<String> tech;
   final String imageUrl;
+  final String? githubUrl;
+  final String? liveDemoUrl;
 
   const _ProjectCard({
+    super.key,
     required this.title,
     required this.description,
     required this.tech,
     required this.imageUrl,
+    this.githubUrl,
+    this.liveDemoUrl,
   });
 
   @override
@@ -207,6 +241,17 @@ class _ProjectCard extends StatefulWidget {
 
 class _ProjectCardState extends State<_ProjectCard> {
   bool _isHovered = false;
+
+  Future<void> _launchUrl(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url)) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Could not launch $urlString')));
+      }
+    }
+  }
 
   void _showProjectDetails(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 800;
@@ -356,7 +401,9 @@ class _ProjectCardState extends State<_ProjectCard> {
             children: [
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: widget.githubUrl != null
+                      ? () => _launchUrl(widget.githubUrl!)
+                      : null,
                   icon: const Icon(Icons.code),
                   label: const Text('GitHub'),
                 ),
@@ -364,7 +411,9 @@ class _ProjectCardState extends State<_ProjectCard> {
               const SizedBox(width: 16),
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: widget.liveDemoUrl != null
+                      ? () => _launchUrl(widget.liveDemoUrl!)
+                      : null,
                   icon: const Icon(Icons.launch),
                   label: const Text('Live Demo'),
                 ),
