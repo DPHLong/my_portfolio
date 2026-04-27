@@ -13,13 +13,9 @@ class HomeSection extends StatelessWidget {
   const HomeSection({super.key, required this.sectionKey});
 
   static const _roles = [
-    'Flutter Developer',
-    'Java Developer',
-    'C# Developer',
-    'Unity Developer',
-    'Firebase Expert',
-    'AI Engineering Enthusiast',
+    'Fullstack Developer',
     'Mobile & Web Engineer',
+    'AI Engineering Enthusiast',
     'IT Support',
   ];
 
@@ -279,7 +275,7 @@ class _DecorativeCodeBlock extends StatelessWidget {
               // ── Pseudo-code ──
               _codeLine('class', ' Developer ', '{', primary, onSurface, theme),
               _propertyLine('  name', '"${AppConstants.name}"', primary, theme),
-              _propertyLine('  role', '"Flutter & Firebase"', primary, theme),
+              _propertyLine('  role', '"Software Engineer"', primary, theme),
               _propertyLine('  focus', '"AI Engineering"', primary, theme),
               _propertyLine(
                 '  passion',
