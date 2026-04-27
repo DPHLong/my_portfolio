@@ -4,6 +4,7 @@ import '../screens/home_screen.dart';
 import '../screens/about_screen.dart';
 import '../screens/experience_screen.dart';
 import '../screens/projects_screen.dart';
+import '../screens/admin_screen.dart';
 
 final goRouter = GoRouter(
   initialLocation: '/',
@@ -28,5 +29,6 @@ final goRouter = GoRouter(
         ),
       ],
     ),
+    GoRoute(path: '/admin', builder: (context, state) => const AdminScreen()),
   ],
 );

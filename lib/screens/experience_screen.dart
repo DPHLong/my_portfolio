@@ -1,65 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/data_providers.dart';
 
-class ExperienceScreen extends StatelessWidget {
+class ExperienceScreen extends ConsumerWidget {
   const ExperienceScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final experiences = [
-      {
-        'role': 'Further training in AI-Engineering',
-        'company': 'Private Learning',
-        'duration': '2026 - Now',
-        'description':
-            'Exploring LLMs, prompt engineering, and integrating intelligent features into real-world apps.',
-        'tech': ['Python', 'LLM', 'Prompt Engineering', 'AI Agents'],
-      },
-      {
-        'role': 'Further training in Java, C#, MySQL',
-        'company': 'IHK Berlin',
-        'duration': '2025 - 2026',
-        'description':
-            'Focused on deepening object-oriented programming skills with Java and C# and mastering database management with MySQL. \n'
-            'Learned about clean architecture, system design, and full-stack development principles.',
-        'tech': ['Java', 'C#', 'MySQL', 'Git', 'Spring Boot', 'Unity'],
-      },
-      {
-        'role': 'Flutter Developer',
-        'company': 'Timee GmbH',
-        'duration': '2022 - 2025',
-        'description':
-            'Designed and maintained cross-platform mobile applications using Flutter and Firebase. \n'
-            'Implemented features for all-in-one calendar and appointment management app.\n'
-            'Features include: calendar and event management, real-time chat and video calls, '
-            'reminder system, and user authentication.',
-        'tech': ['Flutter', 'Firebase', 'Dart', 'Git'],
-      },
-      {
-        'role': 'Junior Android Developer Intern',
-        'company': 'Benefit GmbH',
-        'duration': '2018 - 2019',
-        'description':
-            'Assisted in the development of a new tool for shopping and ordering. \n'
-            'Implemented features for data storage and simplified access for cashiers. \n'
-            'Learned about the full development lifecycle from planning to deployment.',
-        'tech': ['Java', 'Android', 'Git'],
-      },
-      {
-        'role': 'Student in Software Engineering',
-        'company': 'FU Berlin',
-        'duration': '2018 - 2022',
-        'description':
-            'Focus on fundamental computer science principles including data structures, algorithms, and software architecture.',
-        'tech': [
-          'Java',
-          'C++',
-          'Data Structures',
-          'Algorithms',
-          'Software Architecture',
-          'Databases',
-        ],
-      },
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final experiencesAsync = ref.watch(experiencesProvider);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 64),
@@ -74,22 +22,28 @@ class ExperienceScreen extends StatelessWidget {
                 style: Theme.of(context).textTheme.displaySmall,
               ),
               const SizedBox(height: 48),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: experiences.length,
-                itemBuilder: (context, index) {
-                  final exp = experiences[index];
-                  return _TimelineItem(
-                    isFirst: index == 0,
-                    isLast: index == experiences.length - 1,
-                    role: exp['role'] as String,
-                    company: exp['company'] as String,
-                    duration: exp['duration'] as String,
-                    description: exp['description'] as String,
-                    tech: exp['tech'] as List<String>,
+              experiencesAsync.when(
+                data: (experiences) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: experiences.length,
+                    itemBuilder: (context, index) {
+                      final exp = experiences[index];
+                      return _TimelineItem(
+                        isFirst: index == 0,
+                        isLast: index == experiences.length - 1,
+                        role: exp.role,
+                        company: exp.company,
+                        duration: exp.duration,
+                        description: exp.description,
+                        tech: exp.tech,
+                      );
+                    },
                   );
                 },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Center(child: Text('Error: $err')),
               ),
             ],
           ),

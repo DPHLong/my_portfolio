@@ -1,164 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/data_providers.dart';
 
-class ProjectsScreen extends StatelessWidget {
+class ProjectsScreen extends ConsumerWidget {
   const ProjectsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final projects = [
-      {
-        'title': 'E-Commerce App',
-        'description':
-            'A fullstack project for an e-commerce website with product catalog, '
-            'cart, checkout, and payment integration. '
-            'Built with Spring Framework, REST API, Spring Data JPA, Spring Security 7, '
-            'JWT, and deployed on AWS.',
-        'tech': [
-          'Spring Boot',
-          'REST API',
-          'Spring Data JPA',
-          'Spring Security 7',
-          'JWT',
-          'AWS',
-        ],
-        'imageUrl': 'https://via.placeholder.com/400x200?text=E-Commerce+App',
-        'githubUrl': 'https://github.com',
-        'liveDemoUrl': 'https://flutter.dev',
-      },
-      {
-        'title': 'AI Agent',
-        'description':
-            'An AI-powered chat agent embedded in this portfolio. '
-            'Employers can ask questions about my skills, projects, and '
-            'experience -- powered by Google Gemini via Firebase Cloud Functions.',
-        'tech': ['Flutter', 'Gemini API', 'Riverpod'],
-        'imageUrl': 'https://via.placeholder.com/400x200?text=AI+Agent',
-        'githubUrl': 'https://github.com',
-        'liveDemoUrl': 'https://flutter.dev',
-      },
-      {
-        'title': 'Portfolio Website',
-        'description':
-            'This very portfolio -- a modern, responsive single-page '
-            'application built entirely in Flutter for web, showcasing '
-            'cross-platform development skills.',
-        'tech': ['Flutter Web', 'Dart', 'Firebase Hosting'],
-        'imageUrl':
-            'https://via.placeholder.com/400x200?text=Portfolio+Website',
-        'githubUrl': 'https://github.com',
-        'liveDemoUrl': 'https://flutter.dev',
-      },
-      {
-        'title': 'REST API Service',
-        'description':
-            'A backend API built with Java Spring Boot, featuring '
-            'JWT authentication, role-based access control, and '
-            'comprehensive Swagger documentation.',
-        'tech': ['Java', 'Spring Boot', 'REST API', 'JWT', 'Swagger'],
-        'imageUrl': 'https://via.placeholder.com/400x200?text=REST+API+Service',
-        'githubUrl': 'https://github.com',
-        'liveDemoUrl': 'https://flutter.dev',
-      },
-      {
-        'title': 'E-Commerce Mobile App',
-        'description':
-            'A mobile shopping app with product catalog, cart, checkout, '
-            'and payment integration. Built with clean architecture and '
-            'state management best practices.',
-        'tech': ['Flutter', 'Firebase', 'Stripe API'],
-        'imageUrl':
-            'https://via.placeholder.com/400x200?text=E-Commerce+Mobile+App',
-        'githubUrl': 'https://github.com',
-        'liveDemoUrl': 'https://flutter.dev',
-      },
-      {
-        'title': 'Timee - Cross-Platform Calendar App',
-        'description':
-            'A fully-featured calendar management app built with Flutter '
-            'and Firebase. Includes real-time chat & video call, push notifications, '
-            'Map integration, and team collaboration features.',
-        'tech': ['Flutter', 'Firebase', 'Firestore', 'FCM'],
-        'imageUrl': 'https://via.placeholder.com/400x200?text=Timee',
-        'githubUrl': 'https://github.com',
-        'liveDemoUrl': 'https://flutter.dev',
-      },
-      {
-        'title': 'Zoom Clone App',
-        'description':
-            'A fully-featured video conferencing app built with Flutter '
-            'and Firebase. Includes real-time chat & video call, push notifications.',
-        'tech': ['Flutter', 'WebRTC', 'Firebase', 'FCM'],
-        'imageUrl': 'https://via.placeholder.com/400x200?text=Zoom+Clone',
-        'githubUrl': 'https://github.com',
-        'liveDemoUrl': 'https://flutter.dev',
-      },
-      {
-        'title': 'Tiktok Clone App',
-        'description':
-            'A video conferencing application with real-time communication, '
-            'shared videos, and music integration. Built on Firestore streams.',
-        'tech': ['Flutter', 'Firebase', 'Firestore', 'FCM'],
-        'imageUrl': 'https://via.placeholder.com/400x200?text=Tiktok+Clone',
-        'githubUrl': 'https://github.com',
-        'liveDemoUrl': 'https://flutter.dev',
-      },
-      {
-        'title': 'Instagram Clone App',
-        'description':
-            'A social media application with real-time communication, '
-            'typing indicators, likes, comments, and media sharing. '
-            'Built on Firestore streams.',
-        'tech': ['Flutter', 'Firebase', 'Firestore', 'FCM'],
-        'imageUrl': 'https://via.placeholder.com/400x200?text=Instagram+Clone',
-        'githubUrl': 'https://github.com',
-        'liveDemoUrl': 'https://flutter.dev',
-      },
-      {
-        'title': 'Boost Beast',
-        'description':
-            'A 3D racing game built with Unity 3D and C#. '
-            'Features include Cars, Maps, Monsters, and Power-ups. '
-            'Built with Unity 3D and C# for Windows and Console platforms.',
-        'tech': ['Unity 3D', 'C#', 'Blender'],
-        'imageUrl': 'https://via.placeholder.com/400x200?text=Boost+Beast',
-        'githubUrl': 'https://github.com',
-        'liveDemoUrl': 'https://flutter.dev',
-      },
-      {
-        'title': 'Rocket Boost',
-        'description':
-            'A 3D jumping game, like Flappy Bird, built with Unity 3D and C#. '
-            'Features include jumping, obstacles, and power-ups. '
-            'Built with Unity 3D and C# for Windows and Mobile platforms.',
-        'tech': ['Unity 3D', 'C#', 'Blender'],
-        'imageUrl': 'https://via.placeholder.com/400x200?text=Rocket+Boost',
-        'githubUrl': 'https://github.com',
-        'liveDemoUrl': 'https://flutter.dev',
-      },
-      {
-        'title': 'Royal Run',
-        'description':
-            'A 3D game like Subway Surfers, built with Unity 3D and C#. '
-            'Features include jumping, obstacles, and power-ups. '
-            'Built with Unity 3D and C# for Windows and Mobile platforms.',
-        'tech': ['Unity 3D', 'C#', 'Blender'],
-        'imageUrl': 'https://via.placeholder.com/400x200?text=Royal+Run',
-        'githubUrl': 'https://github.com',
-        'liveDemoUrl': 'https://flutter.dev',
-      },
-      {
-        'title': 'Galaxy Strike',
-        'description':
-            'A 3D space shooter game built with Unity 3D and C#. '
-            'Features include spaceships, aliens, and power-ups. '
-            'Built with Unity 3D and C# for Windows and Mobile platforms.',
-        'tech': ['Unity 3D', 'C#', 'Blender'],
-        'imageUrl': 'https://via.placeholder.com/400x200?text=Galaxy+Strike',
-        'githubUrl': 'https://github.com',
-        'liveDemoUrl': 'https://flutter.dev',
-      },
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final projectsAsync = ref.watch(projectsProvider);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 64),
@@ -175,39 +25,45 @@ class ProjectsScreen extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 48),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  // Responsive grid logic
-                  int crossAxisCount = 1;
-                  if (constraints.maxWidth > 1000) {
-                    crossAxisCount = 3;
-                  } else if (constraints.maxWidth > 600) {
-                    crossAxisCount = 2;
-                  }
+              projectsAsync.when(
+                data: (projects) {
+                  return LayoutBuilder(
+                    builder: (context, constraints) {
+                      // Responsive grid logic
+                      int crossAxisCount = 1;
+                      if (constraints.maxWidth > 1000) {
+                        crossAxisCount = 3;
+                      } else if (constraints.maxWidth > 600) {
+                        crossAxisCount = 2;
+                      }
 
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: 32,
-                      mainAxisSpacing: 32,
-                      childAspectRatio: 0.8, // Adjust based on card height
-                    ),
-                    itemCount: projects.length,
-                    itemBuilder: (context, index) {
-                      final project = projects[index];
-                      return _ProjectCard(
-                        title: project['title'] as String,
-                        description: project['description'] as String,
-                        tech: project['tech'] as List<String>,
-                        imageUrl: project['imageUrl'] as String,
-                        githubUrl: project['githubUrl'] as String?,
-                        liveDemoUrl: project['liveDemoUrl'] as String?,
+                      return GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: crossAxisCount,
+                          crossAxisSpacing: 32,
+                          mainAxisSpacing: 32,
+                          childAspectRatio: 0.8, // Adjust based on card height
+                        ),
+                        itemCount: projects.length,
+                        itemBuilder: (context, index) {
+                          final project = projects[index];
+                          return _ProjectCard(
+                            title: project.title,
+                            description: project.description,
+                            tech: project.tech,
+                            imageUrl: project.imageUrl,
+                            githubUrl: project.githubUrl,
+                            liveDemoUrl: project.liveDemoUrl,
+                          );
+                        },
                       );
                     },
                   );
                 },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Center(child: Text('Error: $err')),
               ),
             ],
           ),
