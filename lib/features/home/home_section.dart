@@ -16,10 +16,11 @@ class HomeSection extends StatelessWidget {
     'Flutter Developer',
     'Java Developer',
     'C# Developer',
-    'Unitiy Developer',
+    'Unity Developer',
     'Firebase Expert',
     'AI Engineering Enthusiast',
     'Mobile & Web Engineer',
+    'IT Support',
   ];
 
   @override

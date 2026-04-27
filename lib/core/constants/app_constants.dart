@@ -22,7 +22,22 @@ class AppConstants {
   static const String sectionContact = 'contact';
 
   // ── Assets ──────────────────────────────────────────────────────────
-  static const String profileImage = 'assets/images/profile.png';
+  static const String profileImage = 'assets/images/profile.jpg';
+
+  // ── About Me ──────────────────────────────────────────────────────
+  static const String aboutSummary =
+      'I\'m a passionate software developer based in Berlin, Germany, '
+      'with hands-on experience building cross-platform mobile and web '
+      'applications. My core expertise lies in Flutter & Firebase, '
+      'where I design and ship polished, production-ready apps.\n\n'
+      'In 2026, I graduated from a professional development in Java and C#, '
+      'which shaped my understanding of object-oriented design, clean '
+      'architecture, and backend systems.\n\n'
+      'Now I\'m channeling my curiosity into AI Engineering -- exploring '
+      'how to integrate large language models and intelligent features '
+      'into real-world applications. I believe the intersection of '
+      'mobile development and AI is where the most exciting products '
+      'will be built.';
 
   // ── Layout ──────────────────────────────────────────────────────────
   static const double maxContentWidth = 1200;
