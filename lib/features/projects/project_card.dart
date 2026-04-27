@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_portfolio/data/models/project.dart';
+import 'package:my_portfolio/features/projects/project_detail.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProjectCard extends StatefulWidget {
@@ -24,165 +25,183 @@ class _ProjectCardState extends State<ProjectCard> {
     final onSurface = theme.colorScheme.onSurface;
     final p = widget.project;
 
-    return MouseRegion(
-          onEnter: (_) => setState(() => _hovering = true),
-          onExit: (_) => setState(() => _hovering = false),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOutCubic,
-            transform: _hovering
-                ? (Matrix4.identity()..setTranslationRaw(0.0, -6.0, 0.0))
-                : Matrix4.identity(),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              color: theme.colorScheme.surface,
-              border: Border.all(
-                color: _hovering
-                    ? primary.withAlpha(80)
-                    : onSurface.withAlpha(20),
-              ),
-              boxShadow: _hovering
-                  ? [
-                      BoxShadow(
-                        color: primary.withAlpha(20),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
-                      ),
-                    ]
-                  : [],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // ── Image placeholder ──
-                _ImagePlaceholder(
-                  project: p,
-                  hovering: _hovering,
-                  primary: primary,
-                  theme: theme,
+    return GestureDetector(
+          onTap: () => showProjectDetail(context, p),
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            onEnter: (_) => setState(() => _hovering = true),
+            onExit: (_) => setState(() => _hovering = false),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOutCubic,
+              transform: _hovering
+                  ? (Matrix4.identity()..setTranslationRaw(0.0, -6.0, 0.0))
+                  : Matrix4.identity(),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: theme.colorScheme.surface,
+                border: Border.all(
+                  color: _hovering
+                      ? primary.withAlpha(80)
+                      : onSurface.withAlpha(20),
                 ),
+                boxShadow: _hovering
+                    ? [
+                        BoxShadow(
+                          color: primary.withAlpha(20),
+                          blurRadius: 24,
+                          offset: const Offset(0, 8),
+                        ),
+                      ]
+                    : [],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ── Image placeholder ──
+                  _ImagePlaceholder(
+                    project: p,
+                    hovering: _hovering,
+                    primary: primary,
+                    theme: theme,
+                  ),
 
-                // ── Content ──
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // ── Featured badge + category ──
-                      Row(
-                        children: [
-                          if (p.featured)
+                  // ── Content ──
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // ── Featured badge + category ──
+                        Row(
+                          children: [
+                            if (p.featured)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                margin: const EdgeInsets.only(right: 8),
+                                decoration: BoxDecoration(
+                                  color: primary.withAlpha(20),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  'Featured',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: primary,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ),
                             Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 10,
                                 vertical: 4,
                               ),
-                              margin: const EdgeInsets.only(right: 8),
                               decoration: BoxDecoration(
-                                color: primary.withAlpha(20),
                                 borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                  color: onSurface.withAlpha(30),
+                                ),
                               ),
                               child: Text(
-                                'Featured',
+                                p.category,
                                 style: theme.textTheme.bodySmall?.copyWith(
-                                  color: primary,
-                                  fontWeight: FontWeight.w600,
                                   fontSize: 11,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(
-                                color: onSurface.withAlpha(30),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+
+                        // ── Title ──
+                        Text(
+                          p.title,
+                          style: theme.textTheme.titleLarge,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 8),
+
+                        // ── Description ──
+                        Text(
+                          p.description,
+                          style: theme.textTheme.bodyMedium,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 16),
+
+                        // ── Tech tags ──
+                        Wrap(
+                          spacing: 6,
+                          runSpacing: 6,
+                          children: p.technologies.map((tech) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 5,
                               ),
-                            ),
-                            child: Text(
-                              p.category,
+                              decoration: BoxDecoration(
+                                color: theme.scaffoldBackgroundColor,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                tech,
+                                style: theme.textTheme.labelLarge?.copyWith(
+                                  fontSize: 12,
+                                  color: onSurface.withAlpha(180),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // ── Action links ──
+                        Row(
+                          children: [
+                            if (p.githubUrl != null)
+                              _ActionLink(
+                                icon: FontAwesomeIcons.github,
+                                label: 'Code',
+                                url: p.githubUrl!,
+                                theme: theme,
+                              ),
+                            if (p.githubUrl != null && p.liveUrl != null)
+                              const SizedBox(width: 16),
+                            if (p.liveUrl != null)
+                              _ActionLink(
+                                icon: Icons.open_in_new_rounded,
+                                label: 'Live Demo',
+                                url: p.liveUrl!,
+                                theme: theme,
+                              ),
+                            const Spacer(),
+                            Text(
+                              'View Details',
                               style: theme.textTheme.bodySmall?.copyWith(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
+                                color: primary,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-
-                      // ── Title ──
-                      Text(
-                        p.title,
-                        style: theme.textTheme.titleLarge,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 8),
-
-                      // ── Description ──
-                      Text(
-                        p.description,
-                        style: theme.textTheme.bodyMedium,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 16),
-
-                      // ── Tech tags ──
-                      Wrap(
-                        spacing: 6,
-                        runSpacing: 6,
-                        children: p.technologies.map((tech) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
+                            const SizedBox(width: 4),
+                            Icon(
+                              Icons.arrow_forward_rounded,
+                              size: 14,
+                              color: primary,
                             ),
-                            decoration: BoxDecoration(
-                              color: theme.scaffoldBackgroundColor,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              tech,
-                              style: theme.textTheme.labelLarge?.copyWith(
-                                fontSize: 12,
-                                color: onSurface.withAlpha(180),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // ── Action links ──
-                      Row(
-                        children: [
-                          if (p.githubUrl != null)
-                            _ActionLink(
-                              icon: FontAwesomeIcons.github,
-                              label: 'Code',
-                              url: p.githubUrl!,
-                              theme: theme,
-                            ),
-                          if (p.githubUrl != null && p.liveUrl != null)
-                            const SizedBox(width: 16),
-                          if (p.liveUrl != null)
-                            _ActionLink(
-                              icon: Icons.open_in_new_rounded,
-                              label: 'Live Demo',
-                              url: p.liveUrl!,
-                              theme: theme,
-                            ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         )

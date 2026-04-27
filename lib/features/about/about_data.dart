@@ -85,6 +85,11 @@ class AboutData {
       color: Color(0xFF3776AB),
     ),
     TechItem(
+      name: 'Unity',
+      icon: FontAwesomeIcons.unity,
+      color: Color.fromARGB(255, 61, 61, 61),
+    ),
+    TechItem(
       name: 'AI / ML',
       icon: FontAwesomeIcons.robot,
       color: Color(0xFF00BFA5),

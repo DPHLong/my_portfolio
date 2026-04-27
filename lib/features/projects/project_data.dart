@@ -72,7 +72,6 @@ class ProjectData {
       imageAsset: 'assets/images/project_ecommerce.png',
       technologies: ['Flutter', 'Dart', 'Firebase', 'Stripe'],
       category: 'Mobile',
-      featured: true,
     ),
     Project(
       title: 'Timee - Cross-Platform Calendar App',
