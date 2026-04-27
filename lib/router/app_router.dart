@@ -5,6 +5,7 @@ import '../screens/about_screen.dart';
 import '../screens/experience_screen.dart';
 import '../screens/projects_screen.dart';
 import '../screens/admin_screen.dart';
+import '../screens/contact_screen.dart';
 
 final goRouter = GoRouter(
   initialLocation: '/',
@@ -26,6 +27,10 @@ final goRouter = GoRouter(
         GoRoute(
           path: '/projects',
           builder: (context, state) => const ProjectsScreen(),
+        ),
+        GoRoute(
+          path: '/contact',
+          builder: (context, state) => const ContactScreen(),
         ),
       ],
     ),

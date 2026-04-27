@@ -64,6 +64,7 @@ class DesktopNavBar extends StatelessWidget {
               _NavBarItem(title: 'About', route: '/about'),
               _NavBarItem(title: 'Experience', route: '/experience'),
               _NavBarItem(title: 'Projects', route: '/projects'),
+              _NavBarItem(title: 'Contact', route: '/contact'),
             ],
           ),
         ],
@@ -141,6 +142,13 @@ class MobileDrawer extends StatelessWidget {
             title: const Text('Projects'),
             onTap: () {
               context.go('/projects');
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            title: const Text('Contact'),
+            onTap: () {
+              context.go('/contact');
               Navigator.pop(context);
             },
           ),
