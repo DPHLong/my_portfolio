@@ -21,11 +21,13 @@ const _navItems = [
 class NavBar extends StatelessWidget {
   final ThemeNotifier themeNotifier;
   final void Function(String sectionKey) onNavTap;
+  final String activeSection;
 
   const NavBar({
     super.key,
     required this.themeNotifier,
     required this.onNavTap,
+    required this.activeSection,
   });
 
   @override
@@ -76,6 +78,7 @@ class NavBar extends StatelessWidget {
                     for (final item in _navItems)
                       _DesktopNavLink(
                         label: item.label,
+                        isActive: item.sectionKey == activeSection,
                         onTap: () => onNavTap(item.sectionKey),
                       ),
                     const SizedBox(width: 8),
@@ -94,9 +97,14 @@ class NavBar extends StatelessWidget {
 
 class _DesktopNavLink extends StatefulWidget {
   final String label;
+  final bool isActive;
   final VoidCallback onTap;
 
-  const _DesktopNavLink({required this.label, required this.onTap});
+  const _DesktopNavLink({
+    required this.label,
+    required this.isActive,
+    required this.onTap,
+  });
 
   @override
   State<_DesktopNavLink> createState() => _DesktopNavLinkState();
@@ -109,6 +117,7 @@ class _DesktopNavLinkState extends State<_DesktopNavLink> {
   Widget build(BuildContext context) {
     final primary = Theme.of(context).colorScheme.primary;
     final onSurface = Theme.of(context).colorScheme.onSurface;
+    final isHighlighted = _hovering || widget.isActive;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovering = true),
@@ -118,13 +127,28 @@ class _DesktopNavLinkState extends State<_DesktopNavLink> {
         onTap: widget.onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: AnimatedDefaultTextStyle(
-            duration: const Duration(milliseconds: 200),
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-              color: _hovering ? primary : onSurface,
-              fontWeight: _hovering ? FontWeight.w600 : FontWeight.w500,
-            ),
-            child: Text(widget.label),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 200),
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  color: isHighlighted ? primary : onSurface,
+                  fontWeight: isHighlighted ? FontWeight.w600 : FontWeight.w500,
+                ),
+                child: Text(widget.label),
+              ),
+              const SizedBox(height: 4),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                height: 2,
+                width: widget.isActive ? 20 : 0,
+                decoration: BoxDecoration(
+                  color: primary,
+                  borderRadius: BorderRadius.circular(1),
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -9,8 +9,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class HomeSection extends StatelessWidget {
   final GlobalKey sectionKey;
+  final VoidCallback? onViewProjects;
 
-  const HomeSection({super.key, required this.sectionKey});
+  const HomeSection({super.key, required this.sectionKey, this.onViewProjects});
 
   static const _roles = [
     'Fullstack Developer',
@@ -32,8 +33,18 @@ class HomeSection extends StatelessWidget {
       child: SizedBox(
         height: isMobile ? null : MediaQuery.sizeOf(context).height * 0.75,
         child: isDesktop
-            ? _DesktopLayout(theme: theme, primary: primary, roles: _roles)
-            : _MobileLayout(theme: theme, primary: primary, roles: _roles),
+            ? _DesktopLayout(
+                theme: theme,
+                primary: primary,
+                roles: _roles,
+                onViewProjects: onViewProjects,
+              )
+            : _MobileLayout(
+                theme: theme,
+                primary: primary,
+                roles: _roles,
+                onViewProjects: onViewProjects,
+              ),
       ),
     );
   }
@@ -45,21 +56,27 @@ class _DesktopLayout extends StatelessWidget {
   final ThemeData theme;
   final Color primary;
   final List<String> roles;
+  final VoidCallback? onViewProjects;
 
   const _DesktopLayout({
     required this.theme,
     required this.primary,
     required this.roles,
+    this.onViewProjects,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // ── Left: text content ──
         Expanded(
           flex: 3,
-          child: _HeroContent(theme: theme, primary: primary, roles: roles),
+          child: _HeroContent(
+            theme: theme,
+            primary: primary,
+            roles: roles,
+            onViewProjects: onViewProjects,
+          ),
         ),
 
         const SizedBox(width: 48),
@@ -80,11 +97,13 @@ class _MobileLayout extends StatelessWidget {
   final ThemeData theme;
   final Color primary;
   final List<String> roles;
+  final VoidCallback? onViewProjects;
 
   const _MobileLayout({
     required this.theme,
     required this.primary,
     required this.roles,
+    this.onViewProjects,
   });
 
   @override
@@ -92,7 +111,12 @@ class _MobileLayout extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _HeroContent(theme: theme, primary: primary, roles: roles),
+        _HeroContent(
+          theme: theme,
+          primary: primary,
+          roles: roles,
+          onViewProjects: onViewProjects,
+        ),
         const SizedBox(height: 40),
         _DecorativeCodeBlock(primary: primary, theme: theme),
       ],
@@ -106,11 +130,13 @@ class _HeroContent extends StatelessWidget {
   final ThemeData theme;
   final Color primary;
   final List<String> roles;
+  final VoidCallback? onViewProjects;
 
   const _HeroContent({
     required this.theme,
     required this.primary,
     required this.roles,
+    this.onViewProjects,
   });
 
   @override
@@ -187,13 +213,7 @@ class _HeroContent extends StatelessWidget {
               alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
               children: [
                 ElevatedButton.icon(
-                  onPressed: () {
-                    // Scroll to projects -- find the scroll service
-                    final scrollable = Scrollable.maybeOf(context);
-                    if (scrollable != null) {
-                      // We'll let the nav handle this via ancestor
-                    }
-                  },
+                  onPressed: onViewProjects,
                   icon: const Icon(Icons.rocket_launch_rounded, size: 18),
                   label: const Text('View Projects'),
                 ),

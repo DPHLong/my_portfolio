@@ -12,7 +12,8 @@ class AppConstants {
   static const String githubUrl = 'https://github.com/DPHLong';
   static const String linkedInUrl =
       'https://linkedin.com/in/long-dang-163309351';
-  static const String resumeUrl = '';
+  static const String resumeUrl =
+      'https://drive.google.com/file/d/12A7I6hgCA7B44AwmyYearJXvPaAiweku/view?usp=drive_link';
 
   // ── Section IDs (for scroll navigation) ─────────────────────────────
   static const String sectionHome = 'home';
