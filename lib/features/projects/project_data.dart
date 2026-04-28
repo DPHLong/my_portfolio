@@ -23,6 +23,8 @@ class ProjectData {
       technologies: ['Flutter', 'Firebase', 'Gemini API', 'Cloud Functions'],
       category: 'AI / ML',
       featured: true,
+      // githubUrl: 'https://github.com/joebrews/ai-portfolio-assistant',
+      // liveUrl: 'https://ai-portfolio-assistant.joebrews.com',
     ),
     Project(
       title: 'Portfolio Website',
@@ -33,6 +35,8 @@ class ProjectData {
       imageAsset: 'assets/images/project_portfolio.png',
       technologies: ['Flutter Web', 'Dart', 'Firebase Hosting'],
       category: 'Web',
+      // githubUrl: 'https://github.com/joebrews/ai-portfolio-assistant',
+      // liveUrl: 'https://ai-portfolio-assistant.joebrews.com',
     ),
     Project(
       title: 'E-Commerce Web',
@@ -52,6 +56,8 @@ class ProjectData {
       ],
       category: 'Web',
       featured: true,
+      // githubUrl: 'https://github.com/joebrews/ai-portfolio-assistant',
+      // liveUrl: 'https://ai-portfolio-assistant.joebrews.com',
     ),
     Project(
       title: 'REST API Service',
@@ -62,6 +68,8 @@ class ProjectData {
       imageAsset: 'assets/images/project_api.png',
       technologies: ['Java', 'Spring Boot', 'MySQL'],
       category: 'Backend',
+      // githubUrl: 'https://github.com/joebrews/ai-portfolio-assistant',
+      // liveUrl: 'https://ai-portfolio-assistant.joebrews.com',
     ),
     Project(
       title: 'E-Commerce Mobile App',
@@ -70,8 +78,10 @@ class ProjectData {
           'and payment integration. Built with clean architecture and '
           'state management best practices.',
       imageAsset: 'assets/images/project_ecommerce.png',
-      technologies: ['Flutter', 'Dart', 'Firebase', 'Stripe'],
+      technologies: ['Flutter', 'Dart', 'Firebase', 'FCM'],
       category: 'Mobile',
+      // githubUrl: 'https://github.com/joebrews/ai-portfolio-assistant',
+      // liveUrl: 'https://ai-portfolio-assistant.joebrews.com',
     ),
     Project(
       title: 'Timee - Cross-Platform Calendar App',
@@ -83,6 +93,8 @@ class ProjectData {
       technologies: ['Flutter', 'Firebase', 'Firestore', 'FCM'],
       category: 'Mobile',
       featured: true,
+      // githubUrl: 'https://github.com/joebrews/ai-portfolio-assistant',
+      // liveUrl: 'https://ai-portfolio-assistant.joebrews.com',
     ),
     Project(
       title: 'Zoom Clone App',
@@ -93,6 +105,8 @@ class ProjectData {
       imageAsset: 'assets/images/project_chat.png',
       technologies: ['Flutter', 'Firestore', 'Cloud Storage', 'FCM'],
       category: 'Mobile',
+      // githubUrl: 'https://github.com/joebrews/ai-portfolio-assistant',
+      // liveUrl: 'https://ai-portfolio-assistant.joebrews.com',
     ),
     Project(
       title: 'Tiktok Clone App',
@@ -103,6 +117,8 @@ class ProjectData {
       imageAsset: 'assets/images/project_tiktok.png',
       technologies: ['Flutter', 'Firestore', 'Cloud Storage', 'FCM'],
       category: 'Mobile',
+      // githubUrl: 'https://github.com/joebrews/ai-portfolio-assistant',
+      // liveUrl: 'https://ai-portfolio-assistant.joebrews.com',
     ),
     Project(
       title: 'Instagram Clone App',
@@ -113,6 +129,8 @@ class ProjectData {
       imageAsset: 'assets/images/project_chat.png',
       technologies: ['Flutter', 'Firestore', 'Cloud Storage', 'FCM'],
       category: 'Mobile',
+      // githubUrl: 'https://github.com/joebrews/ai-portfolio-assistant',
+      // liveUrl: 'https://ai-portfolio-assistant.joebrews.com',
     ),
     Project(
       title: 'Boost Beast',
@@ -121,9 +139,11 @@ class ProjectData {
           'Features include Cars, Maps, Monsters, and Power-ups. '
           'Built with Unity 3D and C# for Windows and Console platforms.',
       imageAsset: 'assets/images/boost_beast.png',
-      technologies: ['Unity 3D', 'C#', 'Windows', 'Console'],
+      technologies: ['Unity 3D', 'C#', 'Blender'],
       category: 'Game',
       featured: true,
+      // githubUrl: 'https://github.com/joebrews/ai-portfolio-assistant',
+      // liveUrl: 'https://ai-portfolio-assistant.joebrews.com',
     ),
     Project(
       title: 'Rocket Boost',
@@ -132,8 +152,10 @@ class ProjectData {
           'Features include jumping, obstacles, and power-ups. '
           'Built with Unity 3D and C# for Windows and Mobile platforms.',
       imageAsset: 'assets/images/rocket_boost.png',
-      technologies: ['Unity 3D', 'C#', 'Windows', 'Mobile'],
+      technologies: ['Unity 3D', 'C#', 'Blender'],
       category: 'Game',
+      // githubUrl: 'https://github.com/joebrews/ai-portfolio-assistant',
+      // liveUrl: 'https://ai-portfolio-assistant.joebrews.com',
     ),
     Project(
       title: 'Royal Run',
@@ -142,8 +164,22 @@ class ProjectData {
           'Features include jumping, obstacles, and power-ups. '
           'Built with Unity 3D and C# for Windows and Mobile platforms.',
       imageAsset: 'assets/images/royal_run.png',
-      technologies: ['Unity 3D', 'C#', 'Windows', 'Mobile'],
+      technologies: ['Unity 3D', 'C#', 'Blender'],
       category: 'Game',
+      // githubUrl: 'https://github.com/joebrews/ai-portfolio-assistant',
+      // liveUrl: 'https://ai-portfolio-assistant.joebrews.com',
+    ),
+    Project(
+      title: 'Galaxy Strike',
+      description:
+          'A 3D space shooter game built with Unity 3D and C#. '
+          'Features include spaceships, aliens, and power-ups. '
+          'Built with Unity 3D and C# for Windows and Mobile platforms.',
+      imageAsset: 'assets/images/royal_run.png',
+      technologies: ['Unity 3D', 'C#', 'Blender'],
+      category: 'Game',
+      // githubUrl: 'https://github.com/joebrews/ai-portfolio-assistant',
+      // liveUrl: 'https://ai-portfolio-assistant.joebrews.com',
     ),
   ];
 }

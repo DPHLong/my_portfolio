@@ -37,7 +37,7 @@ class AboutData {
     ),
     JourneyMilestone(
       title: 'Java & C#',
-      subtitle: 'Professional development',
+      subtitle: 'Further training',
       description:
           'Built a solid foundation in object-oriented programming, '
           'clean architecture, and backend systems.',
