@@ -9,6 +9,8 @@ import 'package:my_portfolio/core/widgets/nav_bar.dart';
 import 'package:my_portfolio/core/widgets/scroll_service.dart';
 import 'package:my_portfolio/core/widgets/scroll_to_top_button.dart';
 import 'package:my_portfolio/features/about/about_section.dart';
+import 'package:my_portfolio/features/admin/admin_screen.dart';
+import 'package:my_portfolio/features/chat/chat_section.dart';
 import 'package:my_portfolio/features/contact/contact_section.dart';
 import 'package:my_portfolio/features/home/home_section.dart';
 import 'package:my_portfolio/features/projects/projects_section.dart';
@@ -88,6 +90,11 @@ class _PortfolioPageState extends State<PortfolioPage> {
                         ),
                       ),
                       FadeInOnScroll(
+                        child: ChatSection(
+                          sectionKey: keys[AppConstants.sectionChat]!,
+                        ),
+                      ),
+                      FadeInOnScroll(
                         child: ContactSection(
                           sectionKey: keys[AppConstants.sectionContact]!,
                         ),
@@ -125,6 +132,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
 final GoRouter appRouter = GoRouter(
   routes: [
     GoRoute(path: '/', builder: (context, state) => const PortfolioPage()),
+    GoRoute(path: '/admin', builder: (context, state) => const AdminScreen()),
   ],
 );
 

@@ -20,6 +20,7 @@ class AppConstants {
   static const String sectionAbout = 'about';
   static const String sectionProjects = 'projects';
   static const String sectionSkills = 'skills';
+  static const String sectionChat = 'chat';
   static const String sectionContact = 'contact';
 
   // ── Assets ──────────────────────────────────────────────────────────

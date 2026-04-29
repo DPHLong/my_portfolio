@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -300,24 +301,40 @@ class _ContactFormState extends State<_ContactForm> {
 
     setState(() => _sending = true);
 
-    // TODO: Replace with Firebase Firestore write when Firebase is set up
-    await Future.delayed(const Duration(seconds: 1));
+    try {
+      await FirebaseFirestore.instance.collection('contact_messages').add({
+        'name': _nameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'message': _messageController.text.trim(),
+        'timestamp': FieldValue.serverTimestamp(),
+      });
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    setState(() {
-      _sending = false;
-      _sent = true;
-    });
+      setState(() {
+        _sending = false;
+        _sent = true;
+      });
 
-    _nameController.clear();
-    _emailController.clear();
-    _messageController.clear();
+      _nameController.clear();
+      _emailController.clear();
+      _messageController.clear();
 
-    // Reset success state after a delay
-    Future.delayed(const Duration(seconds: 5), () {
-      if (mounted) setState(() => _sent = false);
-    });
+      // Reset success state after a delay
+      Future.delayed(const Duration(seconds: 5), () {
+        if (mounted) setState(() => _sent = false);
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _sending = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to send message. Please try again. ($e)'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
 

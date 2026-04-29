@@ -9,6 +9,7 @@ class ScrollService extends ChangeNotifier {
     AppConstants.sectionAbout: GlobalKey(),
     AppConstants.sectionProjects: GlobalKey(),
     AppConstants.sectionSkills: GlobalKey(),
+    AppConstants.sectionChat: GlobalKey(),
     AppConstants.sectionContact: GlobalKey(),
   };
 
@@ -17,6 +18,7 @@ class ScrollService extends ChangeNotifier {
     AppConstants.sectionAbout,
     AppConstants.sectionProjects,
     AppConstants.sectionSkills,
+    AppConstants.sectionChat,
     AppConstants.sectionContact,
   ];
 

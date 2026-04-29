@@ -15,6 +15,7 @@ const _navItems = [
   NavItem(label: 'About', sectionKey: AppConstants.sectionAbout),
   NavItem(label: 'Projects', sectionKey: AppConstants.sectionProjects),
   NavItem(label: 'Skills', sectionKey: AppConstants.sectionSkills),
+  NavItem(label: 'AI Chat', sectionKey: AppConstants.sectionChat),
   NavItem(label: 'Contact', sectionKey: AppConstants.sectionContact),
 ];
 
