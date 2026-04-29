@@ -1,6 +1,11 @@
 import {onCall, HttpsError} from "firebase-functions/v2/https";
 import {GoogleGenerativeAI} from "@google/generative-ai";
 import {defineString} from "firebase-functions/params";
+import * as admin from "firebase-admin";
+import * as nodemailer from "nodemailer";
+
+admin.initializeApp();
+const db = admin.firestore();
 
 // ── Rate limiting store (in-memory, resets on cold start) ────────────
 const rateLimitMap = new Map<string, {count: number; resetAt: number}>();
@@ -153,3 +158,123 @@ export const askAgent = onCall(
     }
   }
 );
+
+// ── Email config from Firebase environment ───────────────────────────
+const gmailUser = defineString("GMAIL_USER");
+const gmailAppPassword = defineString("GMAIL_APP_PASSWORD");
+
+// ── Contact form anti-spam: per-email rate limit ─────────────────────
+const CONTACT_RATE_LIMIT = 3; // max messages per window
+const CONTACT_RATE_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+
+// ── Cloud Function: sendContactMessage ───────────────────────────────
+export const sendContactMessage = onCall(
+  {
+    region: "europe-west1",
+    maxInstances: 5,
+    cors: true,
+  },
+  async (request) => {
+    // ── Validate input ──
+    const {name, email, message} = request.data || {};
+
+    if (!name || typeof name !== "string" || name.trim().length === 0) {
+      throw new HttpsError("invalid-argument", "Please provide your name.");
+    }
+    if (!email || typeof email !== "string" || email.trim().length === 0) {
+      throw new HttpsError("invalid-argument", "Please provide your email.");
+    }
+    if (!message || typeof message !== "string" || message.trim().length === 0) {
+      throw new HttpsError("invalid-argument", "Please provide a message.");
+    }
+
+    // Basic email format check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      throw new HttpsError("invalid-argument", "Please provide a valid email.");
+    }
+
+    const trimmedName = name.trim().substring(0, 100);
+    const trimmedEmail = email.trim().substring(0, 200);
+    const trimmedMessage = message.trim().substring(0, 2000);
+
+    // ── Anti-spam: check recent messages from the same email ──
+    const cutoff = new Date(Date.now() - CONTACT_RATE_WINDOW_MS);
+    const recentSnapshot = await db
+      .collection("contact_messages")
+      .where("email", "==", trimmedEmail)
+      .where("timestamp", ">=", admin.firestore.Timestamp.fromDate(cutoff))
+      .get();
+
+    if (recentSnapshot.size >= CONTACT_RATE_LIMIT) {
+      throw new HttpsError(
+        "resource-exhausted",
+        "You've sent too many messages recently. Please try again later."
+      );
+    }
+
+    // ── IP-based rate limiting ──
+    const ip = request.rawRequest.ip || "unknown";
+    if (!checkRateLimit(ip)) {
+      throw new HttpsError(
+        "resource-exhausted",
+        "Too many requests. Please wait a moment before trying again."
+      );
+    }
+
+    // ── Save to Firestore ──
+    await db.collection("contact_messages").add({
+      name: trimmedName,
+      email: trimmedEmail,
+      message: trimmedMessage,
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      ip: ip,
+    });
+
+    // ── Send email notification ──
+    try {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: gmailUser.value(),
+          pass: gmailAppPassword.value(),
+        },
+      });
+
+      await transporter.sendMail({
+        from: `"Portfolio Contact" <${gmailUser.value()}>`,
+        to: "antholeo@gmail.com",
+        replyTo: trimmedEmail,
+        subject: `Portfolio Contact: ${trimmedName}`,
+        text:
+          `New contact message from your portfolio:\n\n` +
+          `Name: ${trimmedName}\n` +
+          `Email: ${trimmedEmail}\n\n` +
+          `Message:\n${trimmedMessage}`,
+        html:
+          `<h2>New Contact Message</h2>` +
+          `<p><strong>Name:</strong> ${escapeHtml(trimmedName)}</p>` +
+          `<p><strong>Email:</strong> ${escapeHtml(trimmedEmail)}</p>` +
+          `<hr/>` +
+          `<p><strong>Message:</strong></p>` +
+          `<p>${escapeHtml(trimmedMessage).replace(/\n/g, "<br/>")}</p>`,
+      });
+    } catch (emailError) {
+      // Log but don't fail the request — the message is already saved
+      console.error("Failed to send email notification:", emailError);
+    }
+
+    return {success: true};
+  }
+);
+
+/**
+ * Escape HTML special characters to prevent XSS in email body.
+ */
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}

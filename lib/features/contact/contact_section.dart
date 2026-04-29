@@ -1,4 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -119,12 +121,45 @@ class _ContactFormState extends State<_ContactForm> {
   bool _sending = false;
   bool _sent = false;
 
+  // ── Anti-spam: client-side cooldown ──
+  static const _cooldownDuration = Duration(seconds: 60);
+  DateTime? _lastSentAt;
+  int _cooldownRemaining = 0;
+  Timer? _cooldownTimer;
+
+  final HttpsCallable _sendContact = FirebaseFunctions.instanceFor(
+    region: 'europe-west1',
+  ).httpsCallable('sendContactMessage');
+
   @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
     _messageController.dispose();
+    _cooldownTimer?.cancel();
     super.dispose();
+  }
+
+  bool get _onCooldown => _cooldownRemaining > 0;
+
+  void _startCooldown() {
+    _lastSentAt = DateTime.now();
+    _cooldownRemaining = _cooldownDuration.inSeconds;
+    _cooldownTimer?.cancel();
+    _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+      final elapsed = DateTime.now().difference(_lastSentAt!).inSeconds;
+      final remaining = _cooldownDuration.inSeconds - elapsed;
+      setState(() {
+        _cooldownRemaining = remaining > 0 ? remaining : 0;
+      });
+      if (remaining <= 0) {
+        timer.cancel();
+      }
+    });
   }
 
   @override
@@ -225,7 +260,9 @@ class _ContactFormState extends State<_ContactForm> {
                           ),
                         )
                       : ElevatedButton.icon(
-                          onPressed: _sending ? null : _handleSubmit,
+                          onPressed: _sending || _onCooldown
+                              ? null
+                              : _handleSubmit,
                           icon: _sending
                               ? SizedBox(
                                   width: 18,
@@ -236,7 +273,13 @@ class _ContactFormState extends State<_ContactForm> {
                                   ),
                                 )
                               : const Icon(Icons.send_rounded, size: 18),
-                          label: Text(_sending ? 'Sending...' : 'Send Message'),
+                          label: Text(
+                            _sending
+                                ? 'Sending...'
+                                : _onCooldown
+                                ? 'Wait ${_cooldownRemaining}s'
+                                : 'Send Message',
+                          ),
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 18),
                           ),
@@ -302,11 +345,10 @@ class _ContactFormState extends State<_ContactForm> {
     setState(() => _sending = true);
 
     try {
-      await FirebaseFirestore.instance.collection('contact_messages').add({
+      await _sendContact.call<Map<String, dynamic>>({
         'name': _nameController.text.trim(),
         'email': _emailController.text.trim(),
         'message': _messageController.text.trim(),
-        'timestamp': FieldValue.serverTimestamp(),
       });
 
       if (!mounted) return;
@@ -320,7 +362,9 @@ class _ContactFormState extends State<_ContactForm> {
       _emailController.clear();
       _messageController.clear();
 
-      // Reset success state after a delay
+      _startCooldown();
+
+      // Reset success banner after a delay
       Future.delayed(const Duration(seconds: 5), () {
         if (mounted) setState(() => _sent = false);
       });
@@ -328,11 +372,13 @@ class _ContactFormState extends State<_ContactForm> {
       if (!mounted) return;
       setState(() => _sending = false);
 
+      String errorText = 'Failed to send message. Please try again.';
+      if (e is FirebaseFunctionsException && e.code == 'resource-exhausted') {
+        errorText = e.message ?? 'Too many messages. Please try again later.';
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to send message. Please try again. ($e)'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(errorText), backgroundColor: Colors.red),
       );
     }
   }
