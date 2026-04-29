@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/data_providers.dart';
+import '../../providers/data_providers.dart';
 
 class ExperienceScreen extends ConsumerWidget {
   const ExperienceScreen({super.key});

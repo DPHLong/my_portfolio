@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/data_providers.dart';
+import '../../providers/data_providers.dart';
 
 class ProjectsScreen extends ConsumerWidget {
   const ProjectsScreen({super.key});
@@ -82,7 +82,6 @@ class _ProjectCard extends StatefulWidget {
   final String? liveDemoUrl;
 
   const _ProjectCard({
-    super.key,
     required this.title,
     required this.description,
     required this.tech,
