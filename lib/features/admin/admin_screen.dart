@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -230,7 +231,7 @@ class _LoginPageState extends State<_LoginPage> {
 
                 const SizedBox(height: 24),
                 TextButton.icon(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => GoRouter.of(context).push('/'),
                   icon: const Icon(Icons.arrow_back_rounded, size: 18),
                   label: const Text('Back to Portfolio'),
                 ),
@@ -537,7 +538,9 @@ class _AdminDashboardState extends State<_AdminDashboard> {
                       ),
                     ),
                     TextButton.icon(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () {
+                        GoRouter.of(context).push('/');
+                      },
                       icon: const Icon(Icons.arrow_back_rounded, size: 18),
                       label: const Text('Portfolio'),
                     ),
