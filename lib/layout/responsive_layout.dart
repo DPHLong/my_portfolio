@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_portfolio/theme/theme_notifier.dart';
 import '../widgets/chat_widget.dart';
 
 class ResponsiveLayout extends StatelessWidget {
+  final ThemeNotifier themeNotifier;
   final Widget child;
 
-  const ResponsiveLayout({super.key, required this.child});
+  const ResponsiveLayout({
+    super.key,
+    required this.child,
+    required this.themeNotifier,
+  });
 
   static bool isMobile(BuildContext context) =>
       MediaQuery.of(context).size.width < 800;
@@ -35,7 +41,8 @@ class ResponsiveLayout extends StatelessWidget {
         children: [
           Column(
             children: [
-              if (isDesktop(context)) const DesktopNavBar(),
+              if (isDesktop(context))
+                DesktopNavBar(themeNotifier: themeNotifier),
               Expanded(child: child),
             ],
           ),
@@ -47,7 +54,8 @@ class ResponsiveLayout extends StatelessWidget {
 }
 
 class DesktopNavBar extends StatelessWidget {
-  const DesktopNavBar({super.key});
+  final ThemeNotifier themeNotifier;
+  const DesktopNavBar({super.key, required this.themeNotifier});
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +72,14 @@ class DesktopNavBar extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const Row(
+          Row(
             children: [
-              _NavBarItem(title: 'Home', route: '/'),
-              _NavBarItem(title: 'About', route: '/about'),
-              _NavBarItem(title: 'Experience', route: '/experience'),
-              _NavBarItem(title: 'Projects', route: '/projects'),
-              _NavBarItem(title: 'Contact', route: '/contact'),
+              const _NavBarItem(title: 'Home', route: '/'),
+              const _NavBarItem(title: 'About', route: '/about'),
+              const _NavBarItem(title: 'Experience', route: '/experience'),
+              const _NavBarItem(title: 'Projects', route: '/projects'),
+              const _NavBarItem(title: 'Contact', route: '/contact'),
+              _ThemeToggle(themeNotifier: themeNotifier),
             ],
           ),
         ],
@@ -88,19 +97,52 @@ class _NavBarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 40.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: TextButton(
         onPressed: () {
           context.go(route);
         },
         child: Text(
           title,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
       ),
+    );
+  }
+}
+
+// ── Theme toggle button ───────────────────────────────────────────────
+
+class _ThemeToggle extends StatelessWidget {
+  final ThemeNotifier themeNotifier;
+
+  const _ThemeToggle({required this.themeNotifier});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: themeNotifier,
+      builder: (context, _) {
+        return IconButton(
+          icon: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, animation) =>
+                RotationTransition(turns: animation, child: child),
+            child: Icon(
+              themeNotifier.isDark
+                  ? Icons.light_mode_rounded
+                  : Icons.dark_mode_rounded,
+              key: ValueKey(themeNotifier.isDark),
+            ),
+          ),
+          onPressed: themeNotifier.toggle,
+          tooltip: themeNotifier.isDark
+              ? 'Switch to Light Mode'
+              : 'Switch to Dark Mode',
+        );
+      },
     );
   }
 }
