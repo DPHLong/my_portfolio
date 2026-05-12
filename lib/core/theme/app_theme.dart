@@ -21,13 +21,6 @@ class AppTheme {
   static const Color _subtextLight = Color(0xFF6B7280);
   static const Color _subtextDark = Color(0xFF8B949E);
 
-  // static const Color primaryColor = Color(0xFF00E5FF); // Cyan
-  // static const Color secondaryColor = Color(0xFF7C4DFF); // Deep Purple
-  // static const Color backgroundColor = Color(0xFF0F172A); // Slate 900
-  // static const Color surfaceColor = Color(0xFF1E293B); // Slate 800
-  // static const Color textPrimaryColor = Color(0xFFF8FAFC); // Slate 50
-  // static const Color textSecondaryColor = Color(0xFF94A3B8); // Slate 400
-
   // ── Light Theme ─────────────────────────────────────────────────────
   static ThemeData get lightTheme {
     return ThemeData(

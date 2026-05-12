@@ -13,7 +13,7 @@ class AppConstants {
   static const String linkedInUrl =
       'https://linkedin.com/in/long-dang-163309351';
   static const String resumeUrl =
-      'https://drive.google.com/file/d/12A7I6hgCA7B44AwmyYearJXvPaAiweku/view?usp=drive_link';
+      'https://drive.google.com/file/d/1OVg4CKqXTpuM9x3qs2j5ExbROymwa1OW/view?usp=drive_link';
 
   // ── Section IDs (for scroll navigation) ─────────────────────────────
   static const String sectionHome = 'home';
@@ -35,6 +35,8 @@ class AppConstants {
       'In 2026, I graduated from a professional development in Java and C#, '
       'which shaped my understanding of object-oriented design, clean '
       'architecture, and backend systems.\n\n'
+      'Furthermore, I got a certificate in IT Support Specialist, and I can provide '
+      'technical assistance to users and maintain IT systems.\n\n'
       'Now I\'m channeling my curiosity into AI Engineering -- exploring '
       'how to integrate large language models and intelligent features '
       'into real-world applications. I believe the intersection of '
