@@ -1,4 +1,3 @@
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_generative_ai/google_generative_ai.dart' as genai;
 
@@ -12,14 +11,9 @@ class ChatMessage {
     required this.isUser,
     required this.timestamp,
   });
-
-  Map<String, String> toHistory() => {
-    'role': isUser ? 'user' : 'model',
-    'text': text,
-  };
 }
 
-/// System prompt shared between debug (direct) and production (Cloud Function).
+/// System prompt with resume context for the AI agent.
 const _systemPrompt = '''
 You are the personal AI assistant of Pham Hoang Long Dang, a software developer based in Berlin, Germany. Your role is to answer questions from potential employers, recruiters, or collaborators about Long's background, skills, projects, and experience.
 
@@ -72,24 +66,18 @@ class ChatService extends ChangeNotifier {
   List<ChatMessage> get messages => List.unmodifiable(_messages);
   bool get isLoading => _isLoading;
 
-  // ── Production: Cloud Function ──
-  final HttpsCallable _askAgent = FirebaseFunctions.instanceFor(
-    region: 'europe-west1',
-  ).httpsCallable('askAgent');
+  static const _geminiApiKey = 'AIzaSyDyYN5RUX0vOPSAWfsIEeUVr2ppbT4ycy4';
+  genai.GenerativeModel? _model;
+  genai.ChatSession? _chat;
 
-  // ── Debug: Direct Gemini call ──
-  static const _geminiApiKey = '';
-  genai.GenerativeModel? _debugModel;
-  genai.ChatSession? _debugChat;
-
-  genai.ChatSession _getOrCreateDebugChat() {
-    _debugModel ??= genai.GenerativeModel(
-      model: 'gemini-2.5-flash',
+  genai.ChatSession _getOrCreateChat() {
+    _model ??= genai.GenerativeModel(
+      model: 'gemini-2.0-flash',
       apiKey: _geminiApiKey,
       systemInstruction: genai.Content.text(_systemPrompt),
     );
 
-    _debugChat ??= _debugModel!.startChat(
+    _chat ??= _model!.startChat(
       history: _messages
           .map(
             (m) => genai.Content(m.isUser ? 'user' : 'model', [
@@ -99,44 +87,32 @@ class ChatService extends ChangeNotifier {
           .toList(),
     );
 
-    return _debugChat!;
+    return _chat!;
   }
 
   Future<void> sendMessage(String text) async {
     if (text.trim().isEmpty) return;
 
-    final userMessage = ChatMessage(
-      text: text.trim(),
-      isUser: true,
-      timestamp: DateTime.now(),
+    _messages.add(
+      ChatMessage(text: text.trim(), isUser: true, timestamp: DateTime.now()),
     );
-    _messages.add(userMessage);
     _isLoading = true;
     notifyListeners();
 
     try {
-      final reply = kDebugMode
-          ? await _sendDirectToGemini(text.trim())
-          : await _sendViaCloudFunction(text.trim());
+      final chat = _getOrCreateChat();
+      final response = await chat.sendMessage(genai.Content.text(text.trim()));
+      final reply = response.text ?? 'No response received.';
 
       _messages.add(
         ChatMessage(text: reply, isUser: false, timestamp: DateTime.now()),
       );
     } catch (e) {
       debugPrint('Chat error: $e');
-
-      String errorMessage;
-      if (e is FirebaseFunctionsException && e.code == 'resource-exhausted') {
-        errorMessage =
-            'You\'re sending messages too quickly. Please wait a moment.';
-      } else {
-        errorMessage =
-            'Sorry, I\'m having trouble responding right now. Please try again.';
-      }
-
       _messages.add(
         ChatMessage(
-          text: errorMessage,
+          text:
+              'Sorry, I\'m having trouble responding right now. Please try again.',
           isUser: false,
           timestamp: DateTime.now(),
         ),
@@ -147,32 +123,9 @@ class ChatService extends ChangeNotifier {
     }
   }
 
-  /// Debug mode: call Gemini API directly from the client.
-  Future<String> _sendDirectToGemini(String text) async {
-    final chat = _getOrCreateDebugChat();
-    final response = await chat.sendMessage(genai.Content.text(text));
-    return response.text ?? 'No response received.';
-  }
-
-  /// Production mode: call via Firebase Cloud Function.
-  Future<String> _sendViaCloudFunction(String text) async {
-    final history = _messages
-        .where((m) => m.isUser || !m.isUser)
-        .take(_messages.length - 1) // exclude the just-added user message
-        .map((m) => m.toHistory())
-        .toList();
-
-    final result = await _askAgent.call<Map<String, dynamic>>({
-      'message': text,
-      'history': history,
-    });
-
-    return result.data['reply'] as String? ?? 'No response received.';
-  }
-
   void clearChat() {
     _messages.clear();
-    _debugChat = null; // reset the chat session
+    _chat = null;
     notifyListeners();
   }
 }

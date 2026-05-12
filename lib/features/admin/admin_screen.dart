@@ -64,21 +64,31 @@ class _LoginPageState extends State<_LoginPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-    } on FirebaseAuthException catch (e) {
+    } catch (e) {
+      if (!mounted) return;
       String message;
-      switch (e.code) {
-        case 'user-not-found':
-        case 'wrong-password':
-        case 'invalid-credential':
-          message = 'Invalid email or password.';
-        case 'too-many-requests':
-          message = 'Too many attempts. Please try again later.';
-        default:
-          message = 'Login failed. Please try again.';
+      final errorStr = e.toString();
+      if (e is FirebaseAuthException) {
+        switch (e.code) {
+          case 'user-not-found':
+          case 'wrong-password':
+          case 'invalid-credential':
+            message = 'Invalid email or password.';
+          case 'too-many-requests':
+            message = 'Too many attempts. Please try again later.';
+          default:
+            message = 'Auth error [${e.code}]: ${e.message}';
+        }
+      } else if (errorStr.contains('invalid-credential') ||
+          errorStr.contains('wrong-password') ||
+          errorStr.contains('user-not-found')) {
+        message = 'Invalid email or password.';
+      } else if (errorStr.contains('too-many-requests')) {
+        message = 'Too many attempts. Please try again later.';
+      } else {
+        message = 'Error: $errorStr';
       }
-      if (mounted) setState(() => _error = message);
-    } catch (_) {
-      if (mounted) setState(() => _error = 'An unexpected error occurred.');
+      setState(() => _error = message);
     } finally {
       if (mounted) setState(() => _loading = false);
     }

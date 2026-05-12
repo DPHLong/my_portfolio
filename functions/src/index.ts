@@ -132,7 +132,10 @@ export const askAgent = onCall(
 
     try {
       const genAI = new GoogleGenerativeAI(geminiApiKey.value());
-      const model = genAI.getGenerativeModel({model: "gemini-2.0-flash"});
+      const model = genAI.getGenerativeModel({
+        model: "gemini-2.0-flash",
+        systemInstruction: SYSTEM_PROMPT,
+      });
 
       // Build chat history for context
       const chatHistory = history.slice(-10).map((msg) => ({
@@ -142,7 +145,6 @@ export const askAgent = onCall(
 
       const chat = model.startChat({
         history: chatHistory,
-        systemInstruction: SYSTEM_PROMPT,
       });
 
       const result = await chat.sendMessage(sanitizedMessage);

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cloud_functions/cloud_functions.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -126,10 +126,6 @@ class _ContactFormState extends State<_ContactForm> {
   DateTime? _lastSentAt;
   int _cooldownRemaining = 0;
   Timer? _cooldownTimer;
-
-  final HttpsCallable _sendContact = FirebaseFunctions.instanceFor(
-    region: 'europe-west1',
-  ).httpsCallable('sendContactMessage');
 
   @override
   void dispose() {
@@ -345,10 +341,11 @@ class _ContactFormState extends State<_ContactForm> {
     setState(() => _sending = true);
 
     try {
-      await _sendContact.call<Map<String, dynamic>>({
+      await FirebaseFirestore.instance.collection('contact_messages').add({
         'name': _nameController.text.trim(),
         'email': _emailController.text.trim(),
         'message': _messageController.text.trim(),
+        'timestamp': FieldValue.serverTimestamp(),
       });
 
       if (!mounted) return;
@@ -372,13 +369,11 @@ class _ContactFormState extends State<_ContactForm> {
       if (!mounted) return;
       setState(() => _sending = false);
 
-      String errorText = 'Failed to send message. Please try again.';
-      if (e is FirebaseFunctionsException && e.code == 'resource-exhausted') {
-        errorText = e.message ?? 'Too many messages. Please try again later.';
-      }
-
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorText), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text('Failed to send message. Please try again. ($e)'),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
