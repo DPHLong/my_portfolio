@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_portfolio/theme/theme_notifier.dart';
+import 'package:my_portfolio/core/theme/theme_notifier.dart';
 import '../widgets/chat_widget.dart';
 
 class ResponsiveLayout extends StatelessWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:my_portfolio/theme/theme_notifier.dart';
+import 'package:my_portfolio/core/theme/theme_notifier.dart';
 import 'firebase_options.dart';
-import 'theme/app_theme.dart';
+import 'core/theme/app_theme.dart';
 import 'router/app_router.dart';
 
 void main() async {
