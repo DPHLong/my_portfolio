@@ -36,7 +36,7 @@ class SkillsData {
       description: 'Server-side and cloud services',
       skills: [
         Skill(name: 'Firebase', category: 'Backend', proficiency: 0.90),
-        Skill(name: 'Firestore', category: 'Backend', proficiency: 0.90),
+        Skill(name: 'MySQL', category: 'Backend', proficiency: 0.80),
         Skill(name: 'Cloud Functions', category: 'Backend', proficiency: 0.75),
         Skill(name: 'REST APIs', category: 'Backend', proficiency: 0.80),
       ],
