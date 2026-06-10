@@ -97,13 +97,6 @@ class _ContactFormState extends State<ContactForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Text('GET IN TOUCH', style: Theme.of(context).textTheme.displaySmall),
-        // const SizedBox(height: 16),
-        // Text(
-        //   'Have a question or want to work together? Drop me a message below!',
-        //   style: Theme.of(context).textTheme.bodyLarge,
-        // ),
-        // const SizedBox(height: 48),
         Container(
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(

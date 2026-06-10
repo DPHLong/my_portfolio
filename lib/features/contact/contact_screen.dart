@@ -20,7 +20,6 @@ class _ContactScreenState extends State<ContactScreen> {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1200),
           child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SectionHeading(theme: theme),
               const SizedBox(height: 48),
